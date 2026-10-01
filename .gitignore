@@ -1,0 +1,14 @@
+# Godot 4+
+.godot/
+export.cfg
+export_credentials.cfg
+
+# Builds/reports
+builds/
+reports/
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
