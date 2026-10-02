@@ -63,7 +63,7 @@ static func validate_setup(state: BattleState, map_def: BattleMapDef, balance: B
 	var errors := validate_state(state, map_def, balance, unit_types, terrains)
 	if state == null or map_def == null:
 		return errors
-	if state.round != 1 or state.activation_cursor != 0 or not state.active_squad_id.is_empty() or state.outcome != &"ongoing":
+	if state.round != 1 or state.activation_cursor != 0 or not state.active_squad_id.is_empty() or not state.activated_squad_ids.is_empty() or state.outcome != &"ongoing":
 		errors.append("setup must start before the first activation")
 	for side in state.sides:
 		if side == null:
@@ -92,6 +92,11 @@ static func validate_state(state: BattleState, map_def: BattleMapDef, balance: B
 		return errors
 	if state.schema_version != 1 or state.round < 1 or state.activation_cursor < 0:
 		errors.append("invalid schema version, round or activation cursor")
+	var activated := {}
+	for squad_id in state.activated_squad_ids:
+		if squad_id.is_empty() or activated.has(squad_id):
+			errors.append("invalid activated squad ID %s" % squad_id)
+		activated[squad_id] = true
 	if state.map_id != map_def.id or state.balance_id != balance.id:
 		errors.append("state map or balance ID does not match selected definitions")
 	if state.outcome != &"ongoing" and state.outcome != &"blue" and state.outcome != &"red" and state.outcome != &"draw":
@@ -107,6 +112,7 @@ static func validate_state(state: BattleState, map_def: BattleMapDef, balance: B
 		if terrain != null:
 			terrain_ids[terrain.id] = terrain
 	var entity_ids := {}
+	var squad_ids := {}
 	var occupied := {}
 	var active_count := 0
 	for side in state.sides:
@@ -123,6 +129,7 @@ static func validate_state(state: BattleState, map_def: BattleMapDef, balance: B
 				errors.append("null squad")
 				continue
 			_check_entity_id(squad.id, entity_ids, "squad", errors)
+			squad_ids[squad.id] = true
 			if squad.side_id != side.id:
 				errors.append("squad %s has wrong side ID" % squad.id)
 			if not unit_ids.has(squad.unit_type_id):
@@ -172,11 +179,16 @@ static func validate_state(state: BattleState, map_def: BattleMapDef, balance: B
 					errors.append("active squad ID or living state invalid")
 			var attacked := {}
 			for member_id in squad.attacked_member_ids:
-				if attacked.has(member_id) or not member_ids.has(member_id) or not (member_ids[member_id] as CombatantState).is_living():
+				if attacked.has(member_id) or not member_ids.has(member_id):
 					errors.append("squad %s has invalid attacked member ID" % squad.id)
 				attacked[member_id] = true
 	if active_count > 1 or (active_count == 0 and not state.active_squad_id.is_empty()) or (active_count == 1 and state.active_squad_id.is_empty()):
 		errors.append("active squad cursor is inconsistent")
+	for squad_id in state.activated_squad_ids:
+		if not squad_ids.has(squad_id):
+			errors.append("activated squad ID %s is unknown" % squad_id)
+	if not state.active_squad_id.is_empty() and activated.has(state.active_squad_id):
+		errors.append("active squad has already activated this round")
 	return errors
 
 static func _check_catalog(items: Array, ids: Dictionary, label: String, errors: PackedStringArray) -> void:
