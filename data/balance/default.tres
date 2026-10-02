@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="BattleBalanceDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://data/definitions/battle_balance_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"default"
+version = &"hypothesis_1"
+commander_max_hp_bonus = 2
+commander_power_bonus = 1
+rear_ranged_power_penalty = 2
+guard_bonus_armor = 1
+round_cap = 20
+squads_per_side = 2
+members_per_squad = 3
