@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="AiPolicyDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://ai/ai_policy_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"baseline"
+lethal_score = 7000
+attack_score = 6000
+enabling_move_score = 4000
+progress_move_score = 3000
+guard_score = 2000
+set_front_score = 1000
+damage_weight = 10
+commander_damage_bonus = 1
+move_progress_weight = 10
+exposure_penalty = 2
+front_improvement_threshold = 3

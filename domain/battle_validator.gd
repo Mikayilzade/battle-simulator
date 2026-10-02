@@ -72,9 +72,9 @@ static func validate_setup(state: BattleState, map_def: BattleMapDef, balance: B
 			continue
 		var allowed: Array[Vector2i]
 		if side.id == &"blue":
-			allowed = map_def.blue_spawn_cells
+			allowed = map_def.red_spawn_cells if state.spawn_swapped else map_def.blue_spawn_cells
 		elif side.id == &"red":
-			allowed = map_def.red_spawn_cells
+			allowed = map_def.blue_spawn_cells if state.spawn_swapped else map_def.red_spawn_cells
 		else:
 			errors.append("setup has unknown side %s" % side.id)
 			continue
@@ -146,9 +146,10 @@ static func validate_state(state: BattleState, map_def: BattleMapDef, balance: B
 				var terrain_id := map_def.terrain_id_at(squad.position)
 				if not terrain_ids.has(terrain_id) or (terrain_ids[terrain_id] as TerrainDef).blocked:
 					errors.append("squad %s occupies blocked or unknown terrain" % squad.id)
-			if occupied.has(squad.position):
-				errors.append("squads overlap at %s" % squad.position)
-			occupied[squad.position] = true
+			if squad.living_member_count() > 0:
+				if occupied.has(squad.position):
+					errors.append("living squads overlap at %s" % squad.position)
+				occupied[squad.position] = true
 			if squad.members.size() != balance.members_per_squad:
 				errors.append("squad %s has wrong member count" % squad.id)
 			var member_ids := {}

@@ -132,6 +132,9 @@ static func apply_command(state: BattleState, command: BattleCommand, map_def: B
 	_update_elimination(next)
 	return _success(next, events)
 
+static func is_legal_command(state: BattleState, command: BattleCommand, map_def: BattleMapDef, balance: BattleBalanceDef, units: Array[UnitTypeDef], terrains: Array[TerrainDef]) -> bool:
+	return _command_error(state, command, map_def, balance, units, terrains).is_empty()
+
 static func _command_error(state: BattleState, command: BattleCommand, map_def: BattleMapDef, balance: BattleBalanceDef, units: Array[UnitTypeDef], terrains: Array[TerrainDef]) -> String:
 	if state == null or command == null or map_def == null or balance == null:
 		return "state, command, map and balance are required"
@@ -363,6 +366,7 @@ static func copy_state(state: BattleState) -> BattleState:
 	next.seed = state.seed
 	next.rng_state = state.rng_state
 	next.first_side_id = state.first_side_id
+	next.spawn_swapped = state.spawn_swapped
 	for side in state.sides:
 		var side_copy := SideState.new()
 		side_copy.id = side.id

@@ -31,7 +31,7 @@ static func normalized(state: BattleState) -> Dictionary:
 		"round": state.round, "activation_cursor": state.activation_cursor,
 		"active_squad_id": str(state.active_squad_id), "activated_squad_ids": activated,
 		"outcome": str(state.outcome), "seed": state.seed, "rng_state": state.rng_state,
-		"first_side_id": str(state.first_side_id), "sides": sides
+		"first_side_id": str(state.first_side_id), "spawn_swapped": state.spawn_swapped, "sides": sides
 	}
 
 static func setup_sides(state: BattleState) -> Array[Dictionary]:
@@ -53,6 +53,7 @@ static func initial_from_replay(record: BattleReplayRecord) -> BattleState:
 	state.seed = record.seed
 	state.rng_state = BattleRng.initial_state(record.seed)
 	state.first_side_id = record.first_side_id
+	state.spawn_swapped = record.spawn_swapped
 	for side_data in record.setup_sides:
 		var side := SideState.new()
 		side.id = StringName(side_data["id"])

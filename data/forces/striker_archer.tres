@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="ForcePresetDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://data/definitions/force_preset_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"striker_archer"
+display_name = "Striker + Archer"
+squad_unit_type_ids = PackedStringArray("striker", "archer")

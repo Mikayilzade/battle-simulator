@@ -61,3 +61,28 @@ Using `C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe`, th
 Final import and all three runners exited 0. Outputs: `Validation tests passed`, `Command transition tests passed`, `Scheduler/RNG/replay tests passed`. Source scan of `domain/` found no Node/SceneTree/Control/Timer/UI class or global random calls.
 
 Next gate: baseline AI + headless batch runner.
+
+## Completed gate: baseline AI + headless batch runner
+
+Added `ai/ai_policy_def.gd`, `ai/default_policy.tres`, `ai/baseline_ai.gd`, `tools/headless_battle.gd`, `tools/batch_simulator.gd`, and `tests/run_ai_tests.gd`. Added authored `data/maps/broken_pass.tres` (9×7, two blocked center cells, two rough flank cells, legal mirrored spawns) and four force presets for the diagnostic matrix. Domain gained a read-only command legality query and a `spawn_swapped` setup/replay field. Corrected occupancy validation so a dead squad's former cell is free, matching movement rules.
+
+AI receives canonical state and the domain's legal command list. For ATTACK it applies the candidate to a copy to score actual HP loss and death. MOVE gets priority when a domain legality check confirms it enables an attack in the same activation; otherwise it must reduce Manhattan distance, with a small exposure penalty. GUARD requires a nearby threat; SET_FRONT requires a threat and at least 3 points of `current HP + armor` improvement; PASS is the fallback. Stable ties use command kind, target IDs, destination y/x, attacker ID and path. Default policy consumes no RNG. All provisional scoring lives in `ai/default_policy.tres`: lethal 7000, attack 6000, enabling move 4000, progress move 3000, guard 2000, set front 1000, damage weight 10, commander damage bonus 1, progress weight 10, exposure penalty 2, front threshold 3.
+
+`HeadlessBattle` creates validated setup, calls the scheduler, lets each side's configured baseline policy choose from legal commands, applies domain transitions, checks every next state, optionally verifies replay, and collects battle metrics. `batch_simulator.gd` writes JSON and prints a concise summary. It accepts `--count`, `--seed-start`, `--output`, `--blue-policy`, `--red-policy` and `--replay-every`. The 200-stratum matrix is 2 maps × 5 Blue presets × 5 Red presets × 2 spawn orientations × 2 first-side orders; presets are Guard+Guard, Striker+Striker, Archer+Archer, Guard+Archer, Striker+Archer. Seeds are paired across mirror and initiative variants. The full run used 50 seeds per stratum, 1 through 50.
+
+Commands run with `C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe`:
+
+```powershell
+& 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe' --headless --path . --editor --import --quit
+& 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe' --headless --path . --script res://tests/run_validation_tests.gd
+& 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe' --headless --path . --script res://tests/run_command_tests.gd
+& 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe' --headless --path . --script res://tests/run_replay_tests.gd
+& 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe' --headless --path . --script res://tests/run_ai_tests.gd
+& 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe' --headless --path . --script res://tools/batch_simulator.gd -- --count=200 --seed-start=1 --output=reports/small_batch.json
+& 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe' --headless --path . --script res://tools/batch_simulator.gd -- --count=200 --seed-start=1 --replay-every=1 --output=reports/small_batch_replay_all.json
+& 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe' --headless --path . --script res://tools/batch_simulator.gd -- --count=10000 --seed-start=1 --output=reports/diagnostic_10000.json
+```
+
+Final import, four test runners, 200-battle batches and 10,000-battle batch exited 0. The full batch took **485.871 s** (8 min 5.871 s): Blue 4700 wins, Red 4700, draws 600; first side won 5200 of 9400 decisive battles (55.3%); average 8.98 rounds and 29.84 activations; 1400 round-cap outcomes. Open Field: 2500/2500/0 Blue/Red/draw; Broken Pass: 2200/2200/600. There were **0** invalid commands, invariant failures and replay mismatches; 50 sampled full-batch battles and a separate 200-battle sweep covering every stratum passed replay equality. All 10,000 battles terminated by elimination or cap. The first-side advantage and Broken Pass timeout/draw rate are tuning evidence only; balance values were not changed. Since combat currently consumes no RNG, the 50 seeds repeat deterministic outcomes for each fixed stratum. Machine-readable report: `reports/diagnostic_10000.json` (local, ignored by Git).
+
+Next gate: minimal Setup/Battle/Result UI.
