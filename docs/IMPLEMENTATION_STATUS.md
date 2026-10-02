@@ -117,3 +117,26 @@ Start-Process -FilePath 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win6
 Setup, Battle and Result were inspected in the visible 1280×720 Godot window. Start Battle, a highlighted MOVE and PASS were clicked; the Red AI's movement and attack appeared on the board and in the feed. Repeated PASS actions reached a Red Win Result in round 9; clicking Rematch returned to Battle with the spawn sides swapped and Red acting first. The initial button-grid presentation was replaced with a top-down board after visual review. The UI smoke runner also exercised a complete match plus Restart, Rematch and Edit Forces. Visual limitations: simple vector terrain/tokens and basic panels; no illustrated map cards, dedicated keyboard shortcuts or art/animation polish yet.
 
 Next gate: presentation polish + Windows playtest export.
+
+## Visual rework spike: strategy-map presentation
+
+Replaced the rectangular button grid and permanent right-side debug command column. `ui/battle/board_view.gd` now projects the unchanged 9×7 logical cells into a centered isometric field with shallow tile sides, grassy plain, rocky rough ground and raised blocked rocks. Spawn, reachable, hover, active and attack target marks are temporary translucent world overlays; a hovered MOVE draws its route and arrow. `ui/battle/squad_marker.gd` draws original procedural grouped figures, side banners, role silhouettes (shield/sword/bow), commander pennant, ground shadow and a compact HP strip. No external art assets or combat-rule changes.
+
+`ui/battle/command_panel.gd` provides a short bottom command bar. Attacker/target choices appear in Attack mode; front choice appears only for Formation. `ui/battle/battle.gd` remains the presentation/controller adapter, with a small active-formation panel and collapsible chronicle. `ui/setup/setup.gd` now uses two force-card columns with procedural role emblems (`ui/setup/unit_emblem.gd`) and a live isometric map preview with two map choices. `ui/result/result.gd` presents the final field beside a compact victory/survivor report. Main navigation and all domain, AI, scheduler, replay and balance files are unchanged. `tests/run_ui_smoke.gd` now covers map-card preview updates, all 63 isometric cell hit tests, 1280×720 stage bounds and click/panel paths for MOVE, ATTACK, GUARD, SET_FRONT and PASS.
+
+Background commands run with `C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe`:
+
+```powershell
+& 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe' --headless --path . --editor --import --quit
+& 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe' --headless --path . --quit-after 5
+& 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe' --headless --path . --script res://tests/run_validation_tests.gd
+& 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe' --headless --path . --script res://tests/run_command_tests.gd
+& 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe' --headless --path . --script res://tests/run_replay_tests.gd
+& 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe' --headless --path . --script res://tests/run_ai_tests.gd
+& 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe' --headless --path . --script res://tests/run_ui_smoke.gd
+& 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe' --headless --path . --script res://tools/batch_simulator.gd -- --count=20 --seed-start=1 --output=reports/visual_spike_small_batch.json
+```
+
+Final import, headless main-scene load, all five runners and the 20-battle batch exited 0. Batch results: Blue 14, Red 6, draws 0, timeouts 4, sampled replay checks 1, runtime 1.362 s. An attempted offscreen viewport capture with `--headless` could not produce an image because this Godot configuration uses the dummy renderer (`texture_2d_get: Parameter "t" is null`); the temporary capture script was removed. No visible Godot/GUI window was opened in this pass.
+
+Human visual review is still needed for 1280×720 layout, tile/unit readability, overlap and art direction. After that review, the next gate remains presentation polish and Windows playtest export.
