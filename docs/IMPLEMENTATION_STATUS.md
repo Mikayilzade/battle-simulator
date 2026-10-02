@@ -86,3 +86,34 @@ Commands run with `C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_cons
 Final import, four test runners, 200-battle batches and 10,000-battle batch exited 0. The full batch took **485.871 s** (8 min 5.871 s): Blue 4700 wins, Red 4700, draws 600; first side won 5200 of 9400 decisive battles (55.3%); average 8.98 rounds and 29.84 activations; 1400 round-cap outcomes. Open Field: 2500/2500/0 Blue/Red/draw; Broken Pass: 2200/2200/600. There were **0** invalid commands, invariant failures and replay mismatches; 50 sampled full-batch battles and a separate 200-battle sweep covering every stratum passed replay equality. All 10,000 battles terminated by elimination or cap. The first-side advantage and Broken Pass timeout/draw rate are tuning evidence only; balance values were not changed. Since combat currently consumes no RNG, the 50 seeds repeat deterministic outcomes for each fixed stratum. Machine-readable report: `reports/diagnostic_10000.json` (local, ignored by Git).
 
 Next gate: minimal Setup/Battle/Result UI.
+
+## Completed gate: minimal playable Setup / Battle / Result UI
+
+Added `ui/main/main.gd` and `battle_data.gd`, `ui/setup/Setup.tscn` and `setup.gd`, `ui/battle/Battle.tscn`, `battle.gd` and `board_view.gd`, `ui/result/Result.tscn` and `result.gd`, plus `tests/run_ui_smoke.gd`. `Main` switches screens and carries setup choices; `Battle` alone holds the canonical `BattleState`. `UiBattleData` loads shipped definitions and turns selections into a fixed-spawn setup. No Autoload or parallel combat rules were added.
+
+Navigation is Setup → Battle → Result. Setup selects either fixed map and two Guard/Striker/Archer squads per side; autofill chooses Guard + Archer. Blue commands come from `BattleRules.legal_commands` and go through `BattleRules.apply_command`. Red uses `BaselineAi` with the same legal list and scheduler. The board is a 2D top-down 9×7 view with terrain drawing, spawn outlines, Blue circles and Red diamonds, HP bars, reachable cells, targets and hovered routes. Damage preview applies a candidate to a domain copy. The event feed reads transition events and state differences. Presentation timers pace Red steps only. Restart reconstructs the exact setup; Rematch toggles spawn orientation and first side; Edit Forces returns to the retained choices.
+
+Commands run with `C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe`:
+
+```powershell
+& 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe' --headless --path . --editor --import --quit
+& 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe' --headless --path . --script res://tests/run_validation_tests.gd
+& 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe' --headless --path . --script res://tests/run_command_tests.gd
+& 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe' --headless --path . --script res://tests/run_replay_tests.gd
+& 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe' --headless --path . --script res://tests/run_ai_tests.gd
+& 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe' --headless --path . --script res://tests/run_ui_smoke.gd
+& 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe' --headless --path . --script res://tools/batch_simulator.gd -- --count=20 --seed-start=1 --output=reports/ui_gate_small_batch.json
+```
+
+The import and all five test runners exited 0. The 20-battle regression exited 0: Blue 14, Red 6, draws 0, timeout 4, sampled replay 1, runtime 1.426 s. A domain source scan found no UI/Node/Timer/global random dependency (ripgrep exit 1 = no match).
+
+Normal visual launch used:
+
+```powershell
+Start-Process -FilePath 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64.exe' -ArgumentList @('--editor','--path','.')
+Start-Process -FilePath 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64.exe' -ArgumentList @('--path','.')
+```
+
+Setup, Battle and Result were inspected in the visible 1280×720 Godot window. Start Battle, a highlighted MOVE and PASS were clicked; the Red AI's movement and attack appeared on the board and in the feed. Repeated PASS actions reached a Red Win Result in round 9; clicking Rematch returned to Battle with the spawn sides swapped and Red acting first. The initial button-grid presentation was replaced with a top-down board after visual review. The UI smoke runner also exercised a complete match plus Restart, Rematch and Edit Forces. Visual limitations: simple vector terrain/tokens and basic panels; no illustrated map cards, dedicated keyboard shortcuts or art/animation polish yet.
+
+Next gate: presentation polish + Windows playtest export.
