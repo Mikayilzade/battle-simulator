@@ -65,6 +65,8 @@ static func validate_setup(state: BattleState, map_def: BattleMapDef, balance: B
 		return errors
 	if state.round != 1 or state.activation_cursor != 0 or not state.active_squad_id.is_empty() or not state.activated_squad_ids.is_empty() or state.outcome != &"ongoing":
 		errors.append("setup must start before the first activation")
+	if state.rng_state != BattleRng.initial_state(state.seed):
+		errors.append("setup RNG state does not match seed")
 	for side in state.sides:
 		if side == null:
 			continue
@@ -92,6 +94,10 @@ static func validate_state(state: BattleState, map_def: BattleMapDef, balance: B
 		return errors
 	if state.schema_version != 1 or state.round < 1 or state.activation_cursor < 0:
 		errors.append("invalid schema version, round or activation cursor")
+	if state.first_side_id != &"blue" and state.first_side_id != &"red":
+		errors.append("invalid initial side ID")
+	if state.rng_state < 0 or state.rng_state > 0xffffffff:
+		errors.append("RNG state must fit unsigned 32 bits")
 	var activated := {}
 	for squad_id in state.activated_squad_ids:
 		if squad_id.is_empty() or activated.has(squad_id):

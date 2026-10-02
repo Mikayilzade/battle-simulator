@@ -11,7 +11,7 @@ static func start_activation(state: BattleState, squad_id: StringName) -> Dictio
 		return _error(state, "squad does not exist or is dead")
 	if state.activated_squad_ids.has(squad_id):
 		return _error(state, "squad already activated this round")
-	var next := _copy_state(state)
+	var next := copy_state(state)
 	var active := _find_squad(next, squad_id)
 	active.is_active = true
 	active.action_pool = active.living_member_count()
@@ -28,7 +28,7 @@ static func finish_round(state: BattleState, balance: BattleBalanceDef) -> Dicti
 		for squad in side.squads:
 			if squad.living_member_count() > 0 and not state.activated_squad_ids.has(squad.id):
 				return _error(state, "living squad has not activated")
-	var next := _copy_state(state)
+	var next := copy_state(state)
 	if next.round >= balance.round_cap:
 		_set_outcome_by_score(next)
 	else:
@@ -86,7 +86,7 @@ static func apply_command(state: BattleState, command: BattleCommand, map_def: B
 	var error := _command_error(state, command, map_def, balance, units, terrains)
 	if not error.is_empty():
 		return _error(state, error)
-	var next := _copy_state(state)
+	var next := copy_state(state)
 	var squad := _find_squad(next, command.squad_id)
 	var events: Array[Dictionary] = []
 	match command.kind:
@@ -350,7 +350,7 @@ static func _find_terrain(terrains: Array[TerrainDef], id: StringName) -> Terrai
 			return terrain
 	return null
 
-static func _copy_state(state: BattleState) -> BattleState:
+static func copy_state(state: BattleState) -> BattleState:
 	var next := BattleState.new()
 	next.schema_version = state.schema_version
 	next.balance_id = state.balance_id
@@ -361,6 +361,8 @@ static func _copy_state(state: BattleState) -> BattleState:
 	next.activated_squad_ids = state.activated_squad_ids.duplicate()
 	next.outcome = state.outcome
 	next.seed = state.seed
+	next.rng_state = state.rng_state
+	next.first_side_id = state.first_side_id
 	for side in state.sides:
 		var side_copy := SideState.new()
 		side_copy.id = side.id

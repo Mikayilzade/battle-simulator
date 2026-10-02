@@ -88,6 +88,7 @@ func _make_state(map_def: BattleMapDef, balance: BattleBalanceDef, units: Array[
 	var state := BattleState.new()
 	state.map_id = map_def.id
 	state.balance_id = balance.id
+	state.rng_state = BattleRng.initial_state(state.seed)
 	for side_index in 2:
 		var side := SideState.new()
 		side.id = &"blue" if side_index == 0 else &"red"

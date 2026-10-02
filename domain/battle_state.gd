@@ -11,3 +11,5 @@ var activated_squad_ids: Array[StringName] = []
 var sides: Array[SideState] = []
 var outcome: StringName = &"ongoing"
 var seed: int = 0
+var rng_state: int = 0
+var first_side_id: StringName = &"blue"

@@ -38,3 +38,26 @@ Using `C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe`, th
 Import and both test runners exited 0. Final outputs: `Validation tests passed` and `Command transition tests passed`.
 
 Next gate: deterministic scheduler / RNG / replay.
+
+## Completed gate: deterministic scheduler + RNG + replay
+
+Added `domain/battle_scheduler.gd`, `battle_rng.gd`, `battle_state_codec.gd`, `battle_replay_record.gd`, `battle_replay.gd` and `tests/run_replay_tests.gd`. Updated `BattleState` with `first_side_id` and `rng_state`, its copy routine, and state validation. Existing command behavior remains unchanged.
+
+**Scheduler order:** on odd rounds, Blue then Red; on even rounds, Red then Blue, relative to `first_side_id`. Within each side, use authored roster index. Interleave index pairs (`Blue[0], Red[0], Blue[1], Red[1]` for Blue first), skip dead or already activated squads, and use `BattleRules.start_activation`. After all living squads have activated, `BattleRules.finish_round` advances or resolves the round cap. The scheduler derives order from IDs and roster arrays, independent of scene nodes.
+
+**RNG v1:** xorshift32 with unsigned 32-bit state. Normalize seed with `seed & 0xffffffff`; map zero to `0x6d2b79f5`. One sample applies xor shifts 13 left, 17 right, 5 left, masking to 32 bits after each step. The resulting state is also the returned `u32`. `BattleRng.advance` copies canonical state and advances only `rng_state`. Current attacks consume no RNG.
+
+**Replay v1:** `BattleReplayRecord.to_dict()` contains `schema_version`, `replay_version`, `rng_version`, balance ID/version, map ID, seed, initial side ID, initial side/squad/member setup, and an ordered command log. Commands contain only kind, squad/member/target IDs, and movement path cells. The setup excludes action/guard progress. `BattleReplay.run` rebuilds state, validates setup and versions, schedules each activation, applies logged commands, and reports a numbered error on mismatch or illegality. It closes a fully completed final round. `BattleStateCodec.normalized` includes all canonical state fields, including RNG and activation tracking, for value comparison.
+
+Using `C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe`, the commands run for this gate were:
+
+```powershell
+& 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe' --headless --path . --editor --import --quit
+& 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe' --headless --path . --script res://tests/run_validation_tests.gd
+& 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe' --headless --path . --script res://tests/run_command_tests.gd
+& 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe' --headless --path . --script res://tests/run_replay_tests.gd
+```
+
+Final import and all three runners exited 0. Outputs: `Validation tests passed`, `Command transition tests passed`, `Scheduler/RNG/replay tests passed`. Source scan of `domain/` found no Node/SceneTree/Control/Timer/UI class or global random calls.
+
+Next gate: baseline AI + headless batch runner.
