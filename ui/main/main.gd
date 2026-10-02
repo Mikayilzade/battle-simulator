@@ -3,8 +3,10 @@ extends Control
 const SETUP_SCENE = preload("res://ui/setup/Setup.tscn")
 const BATTLE_SCENE = preload("res://ui/battle/Battle.tscn")
 const RESULT_SCENE = preload("res://ui/result/Result.tscn")
+const LAB_SCENE = preload("res://ui/visual_lab/VisualLab.tscn")
 
 var screen: Control
+var lab_selection := VisualLabSelection.new()
 
 func _ready() -> void:
 	show_setup(UiBattleData.default_config())
@@ -21,6 +23,12 @@ func show_setup(config: Dictionary) -> void:
 	var setup_screen := _replace(SETUP_SCENE)
 	setup_screen.configure(config)
 	setup_screen.battle_requested.connect(show_battle)
+	setup_screen.lab_requested.connect(show_lab)
+
+func show_lab(config: Dictionary) -> void:
+	var lab_screen := _replace(LAB_SCENE)
+	lab_screen.configure(config, lab_selection)
+	lab_screen.exit_requested.connect(show_setup)
 
 func show_battle(config: Dictionary) -> void:
 	var battle_screen := _replace(BATTLE_SCENE)

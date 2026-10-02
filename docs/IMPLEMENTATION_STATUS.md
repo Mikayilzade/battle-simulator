@@ -140,3 +140,25 @@ Background commands run with `C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable
 Final import, headless main-scene load, all five runners and the 20-battle batch exited 0. Batch results: Blue 14, Red 6, draws 0, timeouts 4, sampled replay checks 1, runtime 1.362 s. An attempted offscreen viewport capture with `--headless` could not produce an image because this Godot configuration uses the dummy renderer (`texture_2d_get: Parameter "t" is null`); the temporary capture script was removed. No visible Godot/GUI window was opened in this pass.
 
 Human visual review is still needed for 1280×720 layout, tile/unit readability, overlap and art direction. After that review, the next gate remains presentation polish and Windows playtest export.
+
+## Visual Style Lab checkpoint
+
+Added an independent Visual Style Lab entered from Setup and exited back to the same setup choices. `ui/main/main.gd` owns the screen transition and a session-only `VisualLabSelection`; neither battle state nor combat rules are changed. `ui/visual_lab/VisualLab.tscn` and `visual_lab.gd` provide Field Styles, Terrain Library, Unit Styles, Combined Preview, and Shortlist / Archive. A procedural `VisualLabPreview` draws a representative ten-terrain stand with Blue and Red Guard/Striker/Archer, selected/reachable/target overlays, and distinct side shapes. It uses no live battle state.
+
+The catalog is data-driven through `VisualVariantDef` Resources in `ui/visual_lab/variants/`: 5 field directions (two overhead, two isometric/2.5D, one faux-3D), 20 terrain variants (ink and relief for each of 10 families), and 9 unit variants (emblem, grouped figures, miniature for each role). IDs such as `FIELD-25D-01`, `TERRAIN-FOREST-25D-01`, and `UNIT-ARCHER-3D-01` are stable and separate from labels. `render_key` selects a procedural drawing treatment; new descriptors can be added without changing Lab navigation. Favorite/archive status is independent of preview selection; archived entries remain selectable. Choices persist while the application is open, not across restarts. Terrain families beyond the two playable map terrains are Lab art samples only.
+
+Background commands run with `C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe`:
+
+```powershell
+& 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe' --headless --path . --editor --import --quit
+& 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe' --headless --path . --quit-after 5
+& 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe' --headless --path . --script res://tests/run_visual_lab_tests.gd
+& 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe' --headless --path . --script res://tests/run_validation_tests.gd
+& 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe' --headless --path . --script res://tests/run_command_tests.gd
+& 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe' --headless --path . --script res://tests/run_replay_tests.gd
+& 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe' --headless --path . --script res://tests/run_ai_tests.gd
+& 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe' --headless --path . --script res://tests/run_ui_smoke.gd
+& 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe' --headless --path . --script res://tools/batch_simulator.gd -- --count=20 --seed-start=1 --output=reports/visual_lab_small_batch.json
+```
+
+The final import, headless main-scene load, Lab test, five existing regression runners and 20-battle sample all exited 0. Sample: Blue 14 wins, Red 6, no draws, 4 timeouts, one replay check, 1.508 s. No visible Godot window was opened. Human review is still required for actual screen readability, comparison strength of the five field directions, and which exact IDs should be shortlisted or archived. The Lab does not choose a final style. Side-turn scheduler changes remain a separate mechanics task.

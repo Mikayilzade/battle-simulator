@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="VisualVariantDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://ui/visual_lab/visual_variant_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"FIELD-2D-02"
+display_name = "Pastoral"
+description = "Soft hand-drawn patches and open ground."
+category = "field"
+mode = "2d"
+subject = &""
+render_key = &"pastoral"

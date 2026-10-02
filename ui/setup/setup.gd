@@ -1,6 +1,7 @@
 extends Control
 
 signal battle_requested(config: Dictionary)
+signal lab_requested(config: Dictionary)
 
 var config: Dictionary = {}
 var selected_map_id := "open_field"
@@ -82,7 +83,7 @@ func _build() -> void:
 	footer_row.add_theme_constant_override("separation", 14)
 	footer.add_child(footer_row)
 	var info := VBoxContainer.new()
-	info.custom_minimum_size.x = 640
+	info.custom_minimum_size.x = 510
 	footer_row.add_child(info)
 	status_label = _label("", 14)
 	info.add_child(status_label)
@@ -91,6 +92,11 @@ func _build() -> void:
 	auto.pressed.connect(func() -> void: autofill("blue"); autofill("red"))
 	auto.custom_minimum_size = Vector2(140, 48)
 	footer_row.add_child(auto)
+	var lab := Button.new()
+	lab.text = "VISUAL STYLE LAB"
+	lab.custom_minimum_size = Vector2(170, 48)
+	lab.pressed.connect(func() -> void: lab_requested.emit(build_config()))
+	footer_row.add_child(lab)
 	var start := Button.new()
 	start.text = "BEGIN BATTLE  →"
 	start.custom_minimum_size = Vector2(220, 48)

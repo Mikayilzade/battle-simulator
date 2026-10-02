@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="VisualVariantDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://ui/visual_lab/visual_variant_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"TERRAIN-FIELDS-2D-01"
+display_name = "Fields / Ink"
+description = "Fields rendered as ink terrain."
+category = "terrain"
+mode = "2d"
+subject = &"fields"
+render_key = &"ink"

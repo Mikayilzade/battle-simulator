@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="VisualVariantDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://ui/visual_lab/visual_variant_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"FIELD-3D-01"
+display_name = "Diorama"
+description = "Deep oblique terrain and long cast shadows."
+category = "field"
+mode = "3d"
+subject = &""
+render_key = &"diorama"
