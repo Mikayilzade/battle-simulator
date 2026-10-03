@@ -28,6 +28,13 @@ func variants_for(category: String, subject: StringName = &"") -> Array[VisualVa
 			found.append(variant)
 	return found
 
+func variants_for_pack(category: String, pack_id: StringName, subject: StringName = &"") -> Array[VisualVariantDef]:
+	var found: Array[VisualVariantDef] = []
+	for variant in variants:
+		if variant.category == category and variant.pack_id == pack_id and (subject.is_empty() or variant.subject == subject):
+			found.append(variant)
+	return found
+
 func get_variant(id: StringName) -> VisualVariantDef:
 	return by_id.get(id) as VisualVariantDef
 

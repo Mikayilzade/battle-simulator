@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="VisualVariantDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://ui/visual_lab/visual_variant_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"UNIT-GUARD-25D-C02"
+display_name = "Guard / Three-Person Group / C"
+description = "Formation guard in the Civilization-Scale Painted family."
+category = "unit"
+mode = "25d"
+subject = &"guard"
+render_key = &"formation"
+pack_id = &"PACK-25D-C"
+approach = &"formation"

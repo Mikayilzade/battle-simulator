@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="VisualVariantDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://ui/visual_lab/visual_variant_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"UNIT-STRIKER-25D-B02"
+display_name = "Striker / Three-Person Group / B"
+description = "Formation striker in the Cozy Detailed Miniature family."
+category = "unit"
+mode = "25d"
+subject = &"striker"
+render_key = &"formation"
+pack_id = &"PACK-25D-B"
+approach = &"formation"

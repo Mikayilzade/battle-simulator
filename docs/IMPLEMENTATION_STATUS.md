@@ -162,3 +162,26 @@ Background commands run with `C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable
 ```
 
 The final import, headless main-scene load, Lab test, five existing regression runners and 20-battle sample all exited 0. Sample: Blue 14 wins, Red 6, no draws, 4 timeouts, one replay check, 1.508 s. No visible Godot window was opened. Human review is still required for actual screen readability, comparison strength of the five field directions, and which exact IDs should be shortlisted or archived. The Lab does not choose a final style. Side-turn scheduler changes remain a separate mechanics task.
+
+## Isometric fantasy visual reference Lab checkpoint (2026-10-03)
+
+The standalone Lab now follows the working stylized isometric fantasy rulebook. `ui/visual_lab/VisualLab.tscn` opens `isometric_visual_lab.gd` from Setup without changing the playable battle path. Four typed `VisualPackDef` resources in `ui/visual_lab/packs/` define coherent A/B/C/D worlds: `PACK-25D-A` Clean Painted, `PACK-25D-B` Cozy Detailed Miniature, `PACK-25D-C` Civilization-Scale Painted, and `PACK-25D-D` Chunky Storybook. Stable resource IDs remain separate from labels. `VisualPackCatalog` validates pack references and required content; `VisualLabCatalog` retains earlier variants and loads the new ones. Session-only `VisualLabSelection` stores the active pack, per-family overrides, scenario controls, shortlist and archive. No combat/domain, scheduler, AI, replay or balance files changed.
+
+The new `IsometricDiorama` is a separate deterministic procedural renderer, with a map-first 7x6 sample: grassland, cultivated fields, multi-tree forest, hills, mountain, rough ground, rock blocker, lake, sea, connected road, a lumber work site with stacked logs/shelter/worker, and a farmstead with crop rows/worker. Blue Guard and Archer and Red Guard and Striker are drawn as little people with role-specific shield/spear, sword or bow, shadows and non-color faction pennant shapes. Pack A/B/C/D change ground shapes, tile depth/edges, palette, shadow, decoration density and figure proportions. There are 40 new pack terrain resources (10 families x 4), 36 unit resources (3 roles x single/three-person/banner-led x 4), 8 improvement resources (lumber/farm x 4), and 3 commander cues (banner, plume, gold trim). Previous 34 comparison resources remain available in the catalog; the primary browsing UI now emphasizes the four coherent 2.5D packs.
+
+Five browseable sections are PACKS, TERRAIN, UNITS, COMBINED PREVIEW, and SHORTLIST / ARCHIVE. The combined stand can swap a whole pack or override individual terrain, site, unit and commander visuals. It offers normal, selected, reachable, target, route, damaged and dense-forest cases; low/medium/high detail; small/medium/large figures; and three fixed camera-angle presets. Favorite/archive status is independent of the active preview and archived resources are retained. The Lab does not choose a final style or alter battle state.
+
+Background commands run with `C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe`:
+
+```powershell
+& 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe' --headless --path . --editor --import --quit
+& 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe' --headless --path . --quit-after 5
+& 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe' --headless --path . --script res://tests/run_validation_tests.gd
+& 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe' --headless --path . --script res://tests/run_command_tests.gd
+& 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe' --headless --path . --script res://tests/run_replay_tests.gd
+& 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe' --headless --path . --script res://tests/run_ai_tests.gd
+& 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe' --headless --path . --script res://tests/run_ui_smoke.gd
+& 'C:\Users\User\OneDrive\Desktop\Godot_v4.7.1-stable_win64_console.exe' --headless --path . --script res://tests/run_visual_lab_tests.gd
+```
+
+The final import, main-scene load, all six test runners and catalog/composition checks exited 0. The Lab runner verifies every `.tres` visual resource loads, no duplicate IDs, all four complete packs, every terrain and unit approach, scene navigation, mixed overrides, all seven overlay scenarios, detail/scale/angle selectors, and shortlist/archive retention. No visible application was opened. Human visual review remains required for actual 1280x720 readability, whether the four worlds feel different enough, figure/terrain scale, overlay clarity, and which exact IDs to shortlist or archive. The next step is user review of the four pack directions; no pack has been selected as final.

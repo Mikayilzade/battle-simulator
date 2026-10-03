@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="VisualPackDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://ui/visual_lab/visual_pack_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"PACK-25D-B"
+display_name = "Cozy Detailed Miniature"
+description = "Layered woodland, work-site detail, warm materials and little inhabited places."
+render_key = "cozy"
+ground_color = Color(0.525490, 0.611765, 0.388235, 1)
+edge_color = Color(0.400000, 0.356863, 0.270588, 1)
+shadow_color = Color(0.188235, 0.168627, 0.141176, 1)
+accent_color = Color(0.933333, 0.796078, 0.560784, 1)
+detail_amount = 0.86
+edge_strength = 0.33
+shadow_strength = 0.43
+figure_proportion = 1.05

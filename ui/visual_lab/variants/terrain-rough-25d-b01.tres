@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="VisualVariantDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://ui/visual_lab/visual_variant_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"TERRAIN-ROUGH-25D-B01"
+display_name = "Broken Ground / Cozy Detailed Miniature"
+description = "Broken Ground in the Cozy Detailed Miniature material language."
+category = "terrain"
+mode = "25d"
+subject = &"rough"
+render_key = &"b"
+pack_id = &"PACK-25D-B"
+approach = &""

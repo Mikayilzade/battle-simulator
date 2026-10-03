@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="VisualPackDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://ui/visual_lab/visual_pack_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"PACK-25D-A"
+display_name = "Clean Painted Isometric"
+description = "Crisp strategy-first painted ground, restrained props, slim readable figures."
+render_key = "clean"
+ground_color = Color(0.529412, 0.623529, 0.415686, 1)
+edge_color = Color(0.325490, 0.435294, 0.321569, 1)
+shadow_color = Color(0.149020, 0.215686, 0.172549, 1)
+accent_color = Color(0.913725, 0.858824, 0.674510, 1)
+detail_amount = 0.38
+edge_strength = 0.22
+shadow_strength = 0.23
+figure_proportion = 1.0

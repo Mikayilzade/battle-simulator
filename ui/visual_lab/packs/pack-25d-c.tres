@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="VisualPackDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://ui/visual_lab/visual_pack_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"PACK-25D-C"
+display_name = "Civilization-Scale Painted"
+description = "Broad terrain masses and smaller people tuned for a larger map."
+render_key = "civ"
+ground_color = Color(0.592157, 0.662745, 0.541176, 1)
+edge_color = Color(0.400000, 0.517647, 0.474510, 1)
+shadow_color = Color(0.180392, 0.262745, 0.227451, 1)
+accent_color = Color(0.866667, 0.835294, 0.666667, 1)
+detail_amount = 0.25
+edge_strength = 0.14
+shadow_strength = 0.21
+figure_proportion = 0.72

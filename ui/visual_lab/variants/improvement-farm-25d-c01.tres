@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="VisualVariantDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://ui/visual_lab/visual_variant_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"IMPROVEMENT-FARM-25D-C01"
+display_name = "Farmstead / C"
+description = "Farmstead integrated with the Civilization-Scale Painted terrain."
+category = "improvement"
+mode = "25d"
+subject = &"farm"
+render_key = &"c"
+pack_id = &"PACK-25D-C"
+approach = &""

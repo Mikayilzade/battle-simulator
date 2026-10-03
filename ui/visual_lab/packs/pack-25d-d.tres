@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="VisualPackDef" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://ui/visual_lab/visual_pack_def.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"PACK-25D-D"
+display_name = "Chunky Storybook 2.5D"
+description = "Bold rounded forms, strong silhouettes and clear small-screen reading."
+render_key = "storybook"
+ground_color = Color(0.611765, 0.686275, 0.411765, 1)
+edge_color = Color(0.333333, 0.407843, 0.286275, 1)
+shadow_color = Color(0.203922, 0.258824, 0.211765, 1)
+accent_color = Color(0.964706, 0.843137, 0.572549, 1)
+detail_amount = 0.55
+edge_strength = 0.58
+shadow_strength = 0.34
+figure_proportion = 1.2
